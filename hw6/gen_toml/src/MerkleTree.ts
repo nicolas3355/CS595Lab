@@ -8,7 +8,9 @@
  * into pedersenHash([left, right], 0) to replicate the previous pedersenHashPair() logic.
  */
 
-import { BarretenbergSync, Fr } from '@aztec/bb.js';
+import { BarretenbergSync } from '@aztec/bb.js';
+import { Fr } from '@aztec/aztec.js/fields';
+
 
 /**
  * IMerkleTree defines a simple interface for a Merkle tree, including basic
@@ -51,10 +53,10 @@ export class MerkleTree implements IMerkleTree {
   /**
    * The base zero value used for empty leaves.
    * Must be 32 bytes (0x-prefixed 64 hex characters) to avoid buffer issues in Fr.
+   * Initialized inside initialize() after BarretenbergSync.initSingleton() is called,
+   * because Fr requires the WASM to be loaded before it can be constructed.
    */
-  readonly zeroValue = Fr.fromString(
-    '18d85f3de6dcd78b6ffbf5d8374433a5528d8e3bf2100df0b7bb43a4c59ebd63',
-  );
+  zeroValue!: Fr;
 
   /**
    * The total number of levels in the Merkle tree (excluding the root level).
@@ -104,7 +106,12 @@ export class MerkleTree implements IMerkleTree {
     await BarretenbergSync.initSingleton();
     this.bb = BarretenbergSync.getSingleton();
 
-    // 2) Build zero array for each level.
+    // 2) Set zeroValue here, after WASM is loaded (Fr requires WASM to be initialized).
+    this.zeroValue = Fr.fromString(
+      '0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd',
+    );
+
+    // 3) Build zero array for each level.
     let currentZero = this.zeroValue;
     this.zeros.push(currentZero);
 
@@ -127,8 +134,8 @@ export class MerkleTree implements IMerkleTree {
    * @returns The Pedersen hash of [left, right].
    */
   pedersenHash(left: Fr, right: Fr): Fr {
-    const hashRes = this.bb.pedersenHash([left, right], 0);
-    return hashRes;
+    const result = this.bb.pedersenHash({ inputs: [left.toBuffer(), right.toBuffer()], hashIndex: 0 });
+    return Fr.fromBuffer(Buffer.from(result.hash));
   }
 
   /**

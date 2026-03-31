@@ -1,0 +1,7 @@
+[package]
+name = "merkle_trees"
+type = "lib"
+entry = "src/merkle.nr"
+authors = [""]
+
+[dependencies]

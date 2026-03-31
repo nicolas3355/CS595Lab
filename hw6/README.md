@@ -263,7 +263,7 @@ The provided off-chain Merkle tree (from Lab 2) is being used when generating th
   ```js
   const tree = new MerkleTree(8);  // for a tree of depth 8
   // Each empty leaf has the default value:
-  // 0x18d85f3de6dcd78b6ffbf5d8374433a5528d8e3bf2100df0b7bb43a4c59ebd63
+  // 0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd
   ```
 
 - **Inserting a Commitment:**  

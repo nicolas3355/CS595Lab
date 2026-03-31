@@ -1,7 +1,8 @@
 // CircuitTomlGenerator.ts
 
 import { MerkleTree } from './MerkleTree';
-import { Fr, BarretenbergSync } from '@aztec/bb.js';
+import { BarretenbergSync } from '@aztec/bb.js';
+import { Fr } from '@aztec/aztec.js/fields';
 
 export class NoirCircuitTomlGenerator {
   private tree: MerkleTree;
@@ -54,7 +55,8 @@ export class NoirCircuitTomlGenerator {
       const hashPath = proof.pathElements;
 
       // 2) compute & insert commitment
-      const commitment = this.tree.bb.pedersenHash([id, r], 0);
+      const commitmentResult = this.tree.bb.pedersenHash({ inputs: [id.toBuffer(), r.toBuffer()], hashIndex: 0 });
+      const commitment = Fr.fromBuffer(Buffer.from(commitmentResult.hash));
       this.tree.insert(commitment);
       const newRoot = this.tree.root();
 

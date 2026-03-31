@@ -1,0 +1,8 @@
+[package]
+name = "deposit_circuit"
+type = "bin"
+entry = "src/deposit.nr"
+authors = [""]
+
+[dependencies]
+merkle_trees = { path = "../merkle_trees" }

@@ -1,0 +1,8 @@
+[package]
+name = "withdraw_circuit"
+type = "bin"
+entry = "src/withdraw.nr"
+authors = [""]
+
+[dependencies]
+merkle_trees = { path = "../merkle_trees" }

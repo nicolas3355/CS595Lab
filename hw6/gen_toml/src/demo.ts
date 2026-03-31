@@ -1,5 +1,6 @@
 import { NoirCircuitTomlGenerator } from './CircuitTomlGenerator';
-import { Fr } from '@aztec/bb.js';
+import { Fr } from '@aztec/aztec.js/fields';
+
 
 async function runExample() {
   // Create an instance and initialize the tree.
